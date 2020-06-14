@@ -58,9 +58,13 @@ view : Model -> Document Msg
 view model =
   let
     body =
-      [ viewHeader model
-      , viewMain model
-      , viewFooter model
+      [ Html.div
+          [ Html.Attributes.style "font-family" "sans-serif"
+          ]
+          [ viewHeader model
+          , viewMain model
+          , viewFooter model
+          ]
       ]
   in
     { body = body
@@ -70,7 +74,9 @@ view model =
 
 viewFooter : Model -> Html Msg
 viewFooter _ =
-  Html.footer []
+  Html.footer
+    [ Html.Attributes.style "text-align" "center"
+    ]
     [ Html.a
         [ Html.Attributes.href "https://github.com/jpvillaisaza/colors"
         ]
@@ -81,7 +87,9 @@ viewFooter _ =
 
 viewHeader : Model -> Html Msg
 viewHeader _ =
-  Html.header []
+  Html.header
+    [ Html.Attributes.style "text-align" "center"
+    ]
     [ Html.h1 []
         [ Html.text "Colors"
         ]
@@ -90,13 +98,18 @@ viewHeader _ =
 
 viewMain : Model -> Html Msg
 viewMain model =
-  Html.main_ []
-    [ Html.input
-        [ Html.Attributes.autofocus True
-        , Html.Attributes.name "q"
-        , Html.Attributes.type_ "search"
-        , Html.Events.onInput Q
+  Html.main_
+    []
+    [ Html.div
+        [ Html.Attributes.style "text-align" "center"
         ]
-        []
+        [ Html.input
+            [ Html.Attributes.autofocus True
+            , Html.Attributes.name "q"
+            , Html.Attributes.type_ "search"
+            , Html.Events.onInput Q
+            ]
+            []
+        ]
     , Color.viewColors model.colors
     ]
