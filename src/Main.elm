@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 -- elm/browser
-import Browser
+import Browser exposing (Document)
 
 -- elm/html
 import Html exposing (Html)
@@ -21,39 +21,54 @@ type Msg
   = Q String
 
 
-init : Model
-init =
-  { colors = []
-  , q = ""
-  }
+init : () -> ( Model, Cmd Msg )
+init _ =
+  ( { colors = []
+    , q = ""
+    }
+  , Cmd.none
+  )
 
 
 main : Program () Model Msg
 main =
-  Browser.sandbox
+  Browser.document
     { init = init
+    , subscriptions = subscriptions
     , update = update
     , view = view
     }
 
 
-update : Msg -> Model -> Model
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+  Sub.none
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     Q q ->
-      { model | colors = Color.search q, q = q }
+      ( { model | colors = Color.search q, q = q }
+      , Cmd.none
+      )
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
-  Html.div []
-    [ viewHeader model
-    , viewMain model
-    , viewFooter model
-    ]
+  let
+    body =
+      [ viewHeader model
+      , viewMain model
+      , viewFooter model
+      ]
+  in
+    { body = body
+    , title = "Colors"
+    }
 
 
-viewFooter : Model -> Html msg
+viewFooter : Model -> Html Msg
 viewFooter _ =
   Html.footer []
     [ Html.a
@@ -64,7 +79,7 @@ viewFooter _ =
     ]
 
 
-viewHeader : Model -> Html msg
+viewHeader : Model -> Html Msg
 viewHeader _ =
   Html.header []
     [ Html.h1 []
